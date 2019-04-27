@@ -41,8 +41,8 @@ function scraping(options, filename) {
       });
       console.log(table.toString());
 
-      fs.writeFileSync(filename, output.join(os.EOL))
-      console.log(filename, "  CREATED")
+      fs.writeFileSync(filename, output.join(os.EOL));
+      console.log(filename, "  CREATED");
     }).catch(err =>
       console.log(err))
 
