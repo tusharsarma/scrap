@@ -1,6 +1,4 @@
-const rp = require('request-promise');
 const cheerio = require('cheerio');
-const Table = require('cli-table');
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
@@ -19,10 +17,10 @@ function scraping(options, filename, website) {
       if (response.status === 200) {
         const html = response.data;
         const $ = cheerio.load(html);
-        const scrapDetails = website.toString()=="DEL" ? $('.flights_scroll_nou #flight_detail') : $('div.x21n .x7b tbody tr');
+        const scrapDetails = website.toString() == "DEL" ? $('.flights_scroll_nou #flight_detail') : $('div.x21n .x7b tbody tr');
         scrapDetails.each((i, flightRow) => {
           oneFlightData = [];
-          const inner = website.toString()=="DEL" ? 'div#flight_detail_junt div, div#flight_detail_junt2 div' : 'td,th';
+          const inner = website.toString() == "DEL" ? 'div#flight_detail_junt div, div#flight_detail_junt2 div' : 'td,th';
           $(flightRow).find(inner).each((l, data) => {
             flightInformation = $(data).text().split('(')[0];
 
@@ -53,28 +51,24 @@ const fileDeparture = path.join(__dirname, 'departure.csv');
 const delhiData = path.join(__dirname, 'delhi.csv');
 
 
+var standard_input = process.stdin;
 
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout
-});
+standard_input.setEncoding('utf-8');
+console.log('Please enter "BA" for BEN arrival data, "BD" for BEN Departure and "D" for Delhi data: ');
 
+standard_input.on('data', function (data) {
 
-
-rl.question('Please enter "BA" for BEN arrival data, "BD" for BEN Departure and "D" for Delhi data: ', (answer) => {
-
-  if (answer.toUpperCase() == "BA") {
+  if (data.trim().toString().toUpperCase() == 'BA') {
     scraping(arrival, fileArrival, "BEN");
-    rl.close();
-  } else if (answer.toUpperCase() == "BD") {
-    scraping(departure, fileDeparture, "BEN");
-    rl.close();
-  } else if (answer.toUpperCase() == "D") {
-    scraping(delhiURL, delhiData, "DEL");
-    rl.close();
-  } else {
-    console.log("your input is not valid");
-    rl.close();
-  }
+  } else if (data.trim().toString().toUpperCase() == 'BD') {
 
+    scraping(departure, fileDeparture, "BEN");
+  } else if (data.trim().toString().toUpperCase() == 'D') {
+
+    scraping(delhiURL, delhiData, "DEL");
+  } else {
+
+    console.log('INVALID INPUT');
+    process.exit();
+  }
 });
