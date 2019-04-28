@@ -3,7 +3,6 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 const axios = require('axios');
-const readline = require('readline');
 
 
 function scraping(options, filename, website) {
